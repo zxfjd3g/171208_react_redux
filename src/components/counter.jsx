@@ -2,48 +2,42 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {increment, decrement} from '../redux/actions'
 
-export default class App extends Component {
+export default class Counter extends Component {
 
-  static propType = {
-    store: PropTypes.object.isRequired
+  static propTypes = {
+    count: PropTypes.number.isRequired,
+    increment: PropTypes.func.isRequired,
+    decrement: PropTypes.func.isRequired
   }
 
   increment = () => {
     const num = this.refs.numSelect.value*1
-    // const count = this.state.count + num
-    // this.setState({count})
-    this.props.store.dispatch(increment(num))
+    this.props.increment(num)
   }
 
   decrement = () => {
     const num = this.refs.numSelect.value*1
-    // const count = this.state.count - num
-    // this.setState({count})
-    this.props.store.dispatch(decrement(num))
+    this.props.decrement(num)
   }
 
   incrementIfOdd = () => {
-    let count = this.props.store.getState()
+
+    const {count, increment} = this.props
     if(count%2==1) {
       const num = this.refs.numSelect.value*1
-      // count += num
-      // this.setState({count})
-      this.props.store.dispatch(increment(num))
+      increment(num)
     }
   }
 
   incrementAsync = () => {
     setTimeout(() => {
       const num = this.refs.numSelect.value*1
-      // const count = this.state.count + num
-      // this.setState({count})
-      this.props.store.dispatch(increment(num))
+      this.props.increment(num)
     }, 1000)
   }
 
   render () {
-    // const {count} = this.state
-    const count = this.props.store.getState()
+    const count = this.props.count
 
     return (
       <div>

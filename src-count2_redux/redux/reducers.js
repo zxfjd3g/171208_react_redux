@@ -1,10 +1,10 @@
 /*
-根据老的state和指定action, 处理返回一个新的state
+根据老的state和指定的action, 处理返回一个新的state的函数
  */
 import {INCREMENT, DECREMENT} from './action-types'
 
-export function counter(state = 0, action) {
-  console.log('counter', state, action)
+export function count(state=0, action) {
+  console.log('count()', state, action)
   switch (action.type) {
     case INCREMENT:
       return state + action.number
@@ -13,4 +13,5 @@ export function counter(state = 0, action) {
     default:
       return state
   }
+  // return newState
 }
