@@ -1,17 +1,34 @@
-/*
-根据老的state和指定的action, 处理返回一个新的state的函数
- */
-import {INCREMENT, DECREMENT} from './action-types'
+import {REQUESTING, REQUEST_SUCCESS, REQUEST_ERROR} from './action-types'
 
-export function count(state=0, action) {
-  console.log('count()', state, action)
+const initUsersInfo = { // 包含users及相关数据的状态对象
+  firstView: true, // 显示初始提示文本
+  loading: false, // 是否正在请求中
+  users: [], //保存多个用户信息的数组
+  errorMsg: ''  // 请求失败的提示文本
+}
+
+export function usersInfo(state = initUsersInfo, action) {
   switch (action.type) {
-    case INCREMENT:
-      return state + action.number
-    case DECREMENT:
-      return state - action.number
+    case REQUESTING:
+      return {
+        firstView: false,
+        loading: true,
+        users: [],
+        errorMsg: ''
+      }
+    case REQUEST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        users: action.users
+      }
+    case REQUEST_ERROR:
+      return {
+        ...state,
+        loading: false,
+        errorMsg: action.errorMsg
+      }
     default:
       return state
   }
-  // return newState
 }

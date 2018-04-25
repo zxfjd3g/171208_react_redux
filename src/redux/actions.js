@@ -1,32 +1,38 @@
-/*
-包含多个action creator(创建action对象的工厂函数)的模块
-同步action: 返回一个action对象, 其中不能执行异步代码
-异步action: 返回一个函数(接收dispatch), 在些函数中可以执行异步代码, 最终分发一个同步action
- */
-import {INCREMENT, DECREMENT} from './action-types'
+import axios from 'axios'
+import {REQUESTING, REQUEST_SUCCESS, REQUEST_ERROR} from './action-types'
 
-// 同步增加的action
-export const increment = (number) => ({type: INCREMENT, number})
-// 同步减少的action
-export const decrement = (number) => ({type: DECREMENT, number})
+// 每个action type都会对应的一个同步action
+// 请求中的同步action
+const requesting = () => ({type: REQUESTING})
+// 成功的同步action
+const requestSuccess = (users) => ({type: REQUEST_SUCCESS, users})
+// 失败了, 分发一个失败的同步action
+const requestError = (errorMsg) => ({type: REQUEST_ERROR, errorMsg})
 
-// 异步增加的action
-/*export function incrementAsync(number) {
-  return function (dispatch) {
-    // 执行异步任务
-    setTimeout(() => {
-      // 分发增加的同步action
-      dispatch(increment(number))
-    }, 1000)
-  }
-}*/
 
-export const incrementAsync = (number) => {
+// 发送ajax请求获取数据的异步action
+export const search = (searchName) => {
+
   return dispatch => {
-    // 执行异步任务
-    setTimeout(() => {
-      // 分发增加的同步action
-      dispatch(increment(number))
-    }, 1000)
+    // 分发一个请求中的同步action
+    dispatch(requesting())
+    // 发送异步ajax请求
+    // 发异步ajax请求
+    const url = `https://api.github.com/search/users?q=${searchName}`
+    axios.get(url)
+      .then(response => {
+        // 成功了, 分发一个成功的同步action
+        const users = response.data.items.map(item => ({
+          username: item.login,
+          avatarUrl: item.avatar_url,
+          url: item.html_url
+        }))
+        dispatch(requestSuccess(users))
+      })
+      .catch(error => {
+        // 失败了, 分发一个失败的同步action
+        dispatch(requestError('请求失败!'))
+      })
   }
 }
+

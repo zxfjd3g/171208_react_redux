@@ -1,5 +1,3 @@
-/*
-action对象的type常量名称模块
- */
-export const INCREMENT = 'increment' // 增加数量
-export const DECREMENT = 'decrement' // 减少数量
+export const REQUESTING = 'requesting'
+export const REQUEST_SUCCESS= 'request_success'
+export const REQUEST_ERROR = 'request_error'
