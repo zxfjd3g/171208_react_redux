@@ -1,34 +1,41 @@
-import {REQUESTING, REQUEST_SUCCESS, REQUEST_ERROR} from './action-types'
+import {INCREMENT, DECREMENT} from './action-types'
+import {combineReducers} from 'redux'
 
-const initUsersInfo = { // 包含users及相关数据的状态对象
-  firstView: true, // 显示初始提示文本
-  loading: false, // 是否正在请求中
-  users: [], //保存多个用户信息的数组
-  errorMsg: ''  // 请求失败的提示文本
-}
-
-export function usersInfo(state = initUsersInfo, action) {
+function count(state = 0, action) {
+  console.log('counter', state, action)
   switch (action.type) {
-    case REQUESTING:
-      return {
-        firstView: false,
-        loading: true,
-        users: [],
-        errorMsg: ''
-      }
-    case REQUEST_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        users: action.users
-      }
-    case REQUEST_ERROR:
-      return {
-        ...state,
-        loading: false,
-        errorMsg: action.errorMsg
-      }
+    case INCREMENT:
+      return state + action.number
+    case DECREMENT:
+      return state - action.number
     default:
       return state
   }
 }
+
+const initUser = {
+  id: '',
+  name: '',
+  pwd: ''
+}
+function user(state=initUser, action) {
+  switch (action.type) {
+    case 'RECEIVE_USER':
+      return action.data
+    default:
+      return state
+  }
+}
+
+// 向外暴露合并的reduer函数
+export default combineReducers({
+  count: count,
+  user: user
+})
+// 管理的状态的结构:
+/*
+{
+  count: 2
+  usser: {}
+}
+*/
